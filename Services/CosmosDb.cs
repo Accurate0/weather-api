@@ -13,7 +13,7 @@ namespace WeatherApi.Services
         public CosmosDb(IConfiguration configuration)
         {
             _config = configuration;
-            _client = new CosmosClient(configuration.GetConnectionString("database"));
+            _client = new CosmosClient(configuration.GetConnectionString("Database"));
         }
 
         public async Task CreateDatabaseAsync()
