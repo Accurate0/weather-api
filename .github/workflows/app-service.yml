@@ -8,7 +8,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  AZURE_WEBAPP_NAME: weather-api
+  # must match app service resource name in tf
+  AZURE_WEBAPP_NAME: weather-api-app-service
   AZURE_WEBAPP_PACKAGE_PATH: '.'
 
 jobs:
