@@ -28,7 +28,10 @@ namespace WeatherApi.Services
 
         public async Task AddTestValue()
         {
-            await _container.CreateItemAsync<Weather>(new Weather());
+            await _container.CreateItemAsync<Weather>(new Weather
+            {
+                Id = $"{new Random().NextInt64()}"
+            });
         }
     }
 }
