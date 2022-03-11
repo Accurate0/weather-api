@@ -1,18 +1,19 @@
 using Microsoft.Azure.Cosmos;
 using WeatherApi.Model;
-using System.Configuration;
 
 namespace WeatherApi.Services
 {
     public class CosmosDb
     {
+        private IConfiguration _config;
         private CosmosClient _client;
         private Database _database;
         private Container _container;
 
-        public CosmosDb()
+        public CosmosDb(IConfiguration configuration)
         {
-            _client = new CosmosClient(System.Configuration.ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+            _config = configuration;
+            _client = new CosmosClient(configuration.GetConnectionString("Database"));
         }
 
         public async Task CreateDatabaseAsync()
