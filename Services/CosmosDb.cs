@@ -13,7 +13,7 @@ namespace WeatherApi.Services
         public CosmosDb(IConfiguration configuration)
         {
             _config = configuration;
-            _client = new CosmosClient(configuration.GetConnectionString("Database"));
+            _client = new CosmosClient(configuration.GetConnectionString("database"));
         }
 
         public async Task CreateDatabaseAsync()
@@ -23,7 +23,7 @@ namespace WeatherApi.Services
 
         public async Task CreateContainerAsync()
         {
-            _container = await _database.CreateContainerIfNotExistsAsync("WeatherData", "/Test");
+            _container = await _database.CreateContainerIfNotExistsAsync("WeatherData", "/Id");
         }
 
         public async Task AddTestValue()
