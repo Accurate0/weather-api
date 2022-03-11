@@ -22,14 +22,8 @@ public class WeatherController : ControllerBase
     [HttpGet("Current")]
     public async Task<Weather> Get()
     {
-        // log sensitive information :D
-        System.Diagnostics.Trace.TraceInformation(_configuration.GetConnectionString("Database"));
         _logger.LogInformation("request for current weather");
-
-        await _cosmosDb.CreateDatabaseAsync();
-        await _cosmosDb.CreateContainerAsync();
         await _cosmosDb.AddTestValue();
-
         return new Weather();
     }
 }

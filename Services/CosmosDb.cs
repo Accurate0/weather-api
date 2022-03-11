@@ -16,12 +16,18 @@ namespace WeatherApi.Services
             _client = new CosmosClient(configuration.GetConnectionString("database"));
         }
 
-        public async Task CreateDatabaseAsync()
+        public async Task InitAsync()
+        {
+            await CreateDatabaseAsync();
+            await CreateContainerAsync();
+        }
+
+        private async Task CreateDatabaseAsync()
         {
             _database = await _client.CreateDatabaseIfNotExistsAsync("WeatherDatabase");
         }
 
-        public async Task CreateContainerAsync()
+        private async Task CreateContainerAsync()
         {
             _container = await _database.CreateContainerIfNotExistsAsync("WeatherData", "/Test");
         }

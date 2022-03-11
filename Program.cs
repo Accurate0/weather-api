@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging.AzureAppServices;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -21,4 +19,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+// setup cosmosdb
+await app.Services.GetRequiredService<WeatherApi.Services.CosmosDb>().InitAsync();
+
 app.Run();
