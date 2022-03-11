@@ -23,7 +23,7 @@ namespace WeatherApi.Services
 
         public async Task CreateContainerAsync()
         {
-            _container = await _database.CreateContainerIfNotExistsAsync("WeatherData", "/Id");
+            _container = await _database.CreateContainerIfNotExistsAsync("WeatherData", "/Test");
         }
 
         public async Task AddTestValue()
