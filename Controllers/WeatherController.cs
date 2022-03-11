@@ -20,7 +20,7 @@ public class WeatherController : ControllerBase
     public Weather Get()
     {
         // log sensitive information :D
-        _logger.LogInformation(_configuration.GetConnectionString("Database"));
+        System.Diagnostics.Trace.TraceInformation(_configuration.GetConnectionString("Database"));
         _logger.LogInformation("request for current weather");
         return new Weather();
     }
