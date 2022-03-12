@@ -3,7 +3,7 @@
     "proxies": {
         "CurrentWeather": {
             "matchCondition": {
-                "route": "/Weather/Current"
+                "route": "/api/v1/weather/current"
             },
             "backendUri": "https://weather-api-app-service.azurewebsites.net/Weather/Current"
         }
