@@ -2,6 +2,10 @@ name: app-service
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - Proxy/**
+    paths:
+      - .github/workflows/app-service.yml
 
 concurrency:
   group: environment-${{ github.ref }}-${{ github.workflow }}
