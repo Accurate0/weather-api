@@ -9,5 +9,6 @@ namespace WeatherApi.Model
         Unknown,
         Perth,
         PerthAirport,
+        RottnestIsland
     }
 }

@@ -12,7 +12,6 @@ namespace WeatherApi.Services
         private CosmosClient _client;
         private Microsoft.Azure.Cosmos.Database _database;
         private Container _container;
-        private Container _latestContainer;
 
         public Database(IConfiguration configuration, ILogger<Database> logger)
         {
@@ -27,15 +26,15 @@ namespace WeatherApi.Services
             await CreateContainerAsync();
         }
 
-        public async Task AddWeather(Weather item)
+        public async Task AddWeather(WeatherData item)
         {
-            var resp = await _container.UpsertItemAsync<Weather>(item);
+            var resp = await _container.UpsertItemAsync<WeatherData>(item);
             _logger.LogInformation($"request charge: {resp.RequestCharge}");
         }
 
-        public async Task<Weather> GetWeather(Location location)
+        public async Task<WeatherData> GetWeather(Location location)
         {
-            var resp = await _container.ReadItemAsync<Weather>(location.ToString(), PartitionKey.None);
+            var resp = await _container.ReadItemAsync<WeatherData>(location.ToString(), PartitionKey.None);
             _logger.LogInformation($"request charge: {resp.RequestCharge}");
             return resp;
         }

@@ -7,10 +7,11 @@ namespace WeatherApi.Services
 {
     public class BOMWeather : BackgroundService
     {
-        private readonly Dictionary<Location, string> LocationUrl = new()
+        private readonly Dictionary<Location, string> FetchLocationUrls = new()
         {
             [Location.Perth] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94608.json",
-            [Location.PerthAirport] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94610.json"
+            [Location.PerthAirport] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94610.json",
+            [Location.RottnestIsland] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94602.json",
         };
         private readonly ILogger<BOMWeather> _logger;
         private readonly Database _database;
@@ -28,14 +29,14 @@ namespace WeatherApi.Services
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                foreach (var kvp in LocationUrl)
+                foreach (var kvp in FetchLocationUrls)
                 {
                     var resp = await _client.GetAsync(kvp.Value);
                     resp.EnsureSuccessStatusCode();
 
                     var json = await resp.Content.ReadAsStringAsync();
                     var weatherStationData = JsonConvert.DeserializeObject<WeatherStationData>(json);
-                    var weather = _mapper.Map<Weather>(weatherStationData);
+                    var weather = _mapper.Map<WeatherData>(weatherStationData);
 
                     try
                     {

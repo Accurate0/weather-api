@@ -12,6 +12,8 @@ namespace WeatherApi.Utils
                     return Location.Perth;
                 case "Perth Airport":
                     return Location.PerthAirport;
+                case "Rottnest Island":
+                    return Location.RottnestIsland;
                 default:
                     return Location.Unknown;
             }

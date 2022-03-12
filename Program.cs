@@ -6,9 +6,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<WeatherApi.Services.Database>();
 builder.Services.AddHostedService<WeatherApi.Services.BOMWeather>();
 
-builder.Services.AddAutoMapper(typeof(WeatherApi.Model.Mapper.WeatherMapper));
-builder.Services.AddAutoMapper(typeof(WeatherApi.Model.Mapper.WeatherDataMapper));
-builder.Services.AddAutoMapper(typeof(WeatherApi.Model.Mapper.DatumMapper));
+builder.Services.AddAutoMapper(typeof(WeatherApi.Model.Mappers.WeatherMapper));
+builder.Services.AddAutoMapper(typeof(WeatherApi.Model.Mappers.WeatherDataMapper));
 
 builder.Host.ConfigureLogging(logging => logging.AddAzureWebAppDiagnostics());
 

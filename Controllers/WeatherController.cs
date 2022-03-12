@@ -23,7 +23,7 @@ public class WeatherController : ControllerBase
     }
 
     [HttpGet("current")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CurrentWeather))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WeatherData.Weather))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Get([FromQuery] string location)
     {
