@@ -5,7 +5,7 @@ using WeatherApi.Services;
 namespace WeatherApi.Controllers;
 
 [ApiController]
-[Route("Weather")]
+[Route("weather")]
 public class WeatherController : ControllerBase
 {
     private readonly ILogger<WeatherController> _logger;
@@ -19,7 +19,7 @@ public class WeatherController : ControllerBase
         _cosmosDb = cosmosDb;
     }
 
-    [HttpGet("Current")]
+    [HttpGet("current")]
     public async Task<Weather> Get()
     {
         _logger.LogInformation("request for current weather");
