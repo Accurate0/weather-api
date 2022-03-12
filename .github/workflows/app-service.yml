@@ -6,7 +6,7 @@ on:
       - Proxy/**
     paths:
       - .github/workflows/app-service.yml
-      - ./**
+      - **
 
 concurrency:
   group: environment-${{ github.ref }}-${{ github.workflow }}
