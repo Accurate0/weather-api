@@ -11,7 +11,6 @@ env:
   # must match app service resource name in tf
   AZURE_WEBAPP_NAME: weather-api-app-service
   AZURE_WEBAPP_PACKAGE_PATH: '.'
-  AZURE_FUNCTIONAPP_NAME: 'weather-api-fa'
 
 jobs:
   deploy:
@@ -40,12 +39,6 @@ jobs:
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weather-api'
-
-    - name: 'Run Azure Functions deploy'
-      uses: azure/functions-action@v1
-      with:
-        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: './Proxy'
 
     - name: logout
       run: |

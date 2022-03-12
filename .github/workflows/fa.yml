@@ -1,0 +1,32 @@
+name: fa
+on:
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: environment-${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: false
+
+env:
+  # must match resource name in tf
+  AZURE_FUNCTIONAPP_NAME: 'weather-api-fa'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Run Azure Functions deploy'
+      uses: azure/functions-action@v1
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: './Proxy'
+
+    - name: logout
+      run: |
+        az logout
