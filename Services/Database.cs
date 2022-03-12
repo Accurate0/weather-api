@@ -8,14 +8,16 @@ namespace WeatherApi.Services
         public readonly string DatabaseName = "WeatherDatabase";
         public readonly string ContainerName = "v1";
         public readonly string LatestContainerName = "Latest";
+        private ILogger<Database> _logger;
         private IConfiguration _config;
         private CosmosClient _client;
         private Microsoft.Azure.Cosmos.Database _database;
         private Container _container;
         private Container _latestContainer;
 
-        public Database(IConfiguration configuration)
+        public Database(IConfiguration configuration, ILogger<Database> logger)
         {
+            _logger = logger;
             _config = configuration;
             _client = new CosmosClient(configuration.GetConnectionString("Database"));
         }
@@ -28,18 +30,15 @@ namespace WeatherApi.Services
 
         public async Task AddWeather(Weather item)
         {
-            await _latestContainer.UpsertItemAsync<LatestContainer>(new LatestContainer
-            {
-                WeatherId = item.LatestDataTime,
-            });
-
-            await _container.UpsertItemAsync<Weather>(item);
+            var resp = await _container.UpsertItemAsync<Weather>(item);
+            _logger.LogInformation($"request charge: {resp.RequestCharge}");
         }
 
-        public async Task<Weather> GetLatestWeather()
+        public async Task<Weather> GetWeather(Location city)
         {
-            var latest = await _latestContainer.ReadItemAsync<LatestContainer>(LatestContainer.LatestId, PartitionKey.None);
-            return await _container.ReadItemAsync<Weather>(latest.Resource.WeatherId, PartitionKey.None);
+            var resp = await _container.ReadItemAsync<Weather>(city.ToString(), PartitionKey.None);
+            _logger.LogInformation($"request charge: {resp.RequestCharge}");
+            return resp;
         }
 
         private async Task CreateDatabaseAsync()

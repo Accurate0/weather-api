@@ -1,4 +1,5 @@
 using AutoMapper;
+using WeatherApi.Utils;
 
 namespace WeatherApi.Model.Mapper
 {
@@ -7,9 +8,9 @@ namespace WeatherApi.Model.Mapper
         public WeatherMapper()
         {
             CreateMap<WeatherStationData, Weather>()
-                .ForMember(d => d.Name, s => s.MapFrom(x => x.Observations.Header.First().Name))
+                .ForMember(d => d.Name, s => s.MapFrom(x => LocationUtil.GetLocationFromString(x.Observations.Header.First().Name)))
                 .ForMember(d => d.Data, s => s.MapFrom(x => x.Observations.Data))
-                .ForMember(d => d.LatestDataTime, s => s.MapFrom(x => x.Observations.Data.First().LocalDateTimeFull));
+                .ForMember(d => d.CurrentWeather, s => s.MapFrom(x => x.Observations.Data.Find(d => d.SortOrder == 0)));
         }
     }
 }

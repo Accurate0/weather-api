@@ -27,9 +27,12 @@ public class WeatherController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Get([FromQuery] string city)
     {
-        if (city.ToLower().Equals("perth"))
+        Location enumCity;
+        var result = Enum.TryParse<Location>(city, true, out enumCity);
+
+        if (result)
         {
-            var weather = await _database.GetLatestWeather();
+            var weather = await _database.GetWeather(enumCity);
             return new OkObjectResult(_mapper.Map<CurrentWeather>(weather));
         }
         else

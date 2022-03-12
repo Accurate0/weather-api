@@ -1,3 +1,4 @@
+using WeatherApi.Extensions;
 using WeatherApi.Model;
 using Newtonsoft.Json;
 using AutoMapper;
@@ -6,7 +7,11 @@ namespace WeatherApi.Services
 {
     public class BOMWeather : BackgroundService
     {
-        private readonly string PerthWeatherStationUrl = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94608.json";
+        private readonly Dictionary<Location, string> CityUrl = new()
+        {
+            [Location.Perth] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94608.json",
+            [Location.PerthAirport] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94610.json"
+        };
         private readonly ILogger<BOMWeather> _logger;
         private readonly Database _database;
         private readonly IMapper _mapper;
@@ -23,16 +28,29 @@ namespace WeatherApi.Services
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                var resp = await _client.GetAsync(PerthWeatherStationUrl);
-                resp.EnsureSuccessStatusCode();
+                foreach (var kvp in CityUrl)
+                {
+                    var resp = await _client.GetAsync(kvp.Value);
+                    resp.EnsureSuccessStatusCode();
 
-                var json = await resp.Content.ReadAsStringAsync();
-                var weatherStationData = JsonConvert.DeserializeObject<WeatherStationData>(json);
-                var weather = _mapper.Map<Weather>(weatherStationData);
+                    var json = await resp.Content.ReadAsStringAsync();
+                    var weatherStationData = JsonConvert.DeserializeObject<WeatherStationData>(json);
+                    var weather = _mapper.Map<Weather>(weatherStationData);
 
-                await _database.AddWeather(weather);
+                    try
+                    {
+                        var tryGetWeather = await _database.GetWeather(kvp.Key);
+                        var weatherInDatabase = tryGetWeather;
+                        var mergedWeather = weatherInDatabase.Merge(weather);
+                        await _database.AddWeather(mergedWeather);
+                    }
+                    catch (Microsoft.Azure.Cosmos.CosmosException)
+                    {
+                        await _database.AddWeather(weather);
+                    }
 
-                _logger.LogInformation("Added to database successfully");
+                    _logger.LogInformation($"{kvp.Key.ToString()}: Added to database successfully");
+                }
                 // 15 minutes
                 await Task.Delay(900000, cancellationToken);
             }
