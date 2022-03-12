@@ -7,7 +7,7 @@ namespace WeatherApi.Services
 {
     public class BOMWeather : BackgroundService
     {
-        private readonly Dictionary<Location, string> CityUrl = new()
+        private readonly Dictionary<Location, string> LocationUrl = new()
         {
             [Location.Perth] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94608.json",
             [Location.PerthAirport] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94610.json"
@@ -28,7 +28,7 @@ namespace WeatherApi.Services
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                foreach (var kvp in CityUrl)
+                foreach (var kvp in LocationUrl)
                 {
                     var resp = await _client.GetAsync(kvp.Value);
                     resp.EnsureSuccessStatusCode();

@@ -33,9 +33,9 @@ namespace WeatherApi.Services
             _logger.LogInformation($"request charge: {resp.RequestCharge}");
         }
 
-        public async Task<Weather> GetWeather(Location city)
+        public async Task<Weather> GetWeather(Location location)
         {
-            var resp = await _container.ReadItemAsync<Weather>(city.ToString(), PartitionKey.None);
+            var resp = await _container.ReadItemAsync<Weather>(location.ToString(), PartitionKey.None);
             _logger.LogInformation($"request charge: {resp.RequestCharge}");
             return resp;
         }
