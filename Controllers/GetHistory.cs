@@ -28,7 +28,7 @@ public partial class WeatherController : ControllerBase
         {
             var weather = await _database.GetWeather(locationEnum);
             var response = weather.HistorialWeather
-                            .OrderBy(w => w.Time)
+                            .OrderByDescending(w => w.Time)
                             .Take(parameters.Count)
                             .ToList();
 
