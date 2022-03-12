@@ -17,7 +17,6 @@ public class HeartbeatController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult GetHeartbeat()
     {
         return new NoContentResult();
