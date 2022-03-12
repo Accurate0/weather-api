@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WeatherApi.Model;
+using AutoMapper;
 using WeatherApi.Services;
 
 namespace WeatherApi.Controllers;
@@ -10,20 +11,30 @@ public class WeatherController : ControllerBase
 {
     private readonly ILogger<WeatherController> _logger;
     private IConfiguration _configuration;
-    private CosmosDb _cosmosDb;
+    private Database _database;
+    private IMapper _mapper;
 
-    public WeatherController(ILogger<WeatherController> logger, IConfiguration configuration, CosmosDb cosmosDb)
+    public WeatherController(ILogger<WeatherController> logger, IConfiguration configuration, Database database, IMapper mapper)
     {
         _logger = logger;
         _configuration = configuration;
-        _cosmosDb = cosmosDb;
+        _database = database;
+        _mapper = mapper;
     }
 
     [HttpGet("current")]
-    public async Task<Weather> Get()
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CurrentWeather))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Get([FromQuery] string city)
     {
-        _logger.LogInformation("request for current weather");
-        await _cosmosDb.AddTestValue();
-        return new Weather();
+        if (city.ToLower().Equals("perth"))
+        {
+            var weather = await _database.GetLatestWeather();
+            return CreatedAtAction(nameof(Get), _mapper.Map<CurrentWeather>(weather));
+        }
+        else
+        {
+            return new BadRequestResult();
+        }
     }
 }
