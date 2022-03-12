@@ -33,7 +33,7 @@ public class WeatherController : ControllerBase
         if (result)
         {
             var weather = await _database.GetWeather(locationEnum);
-            return new OkObjectResult(_mapper.Map<CurrentWeather>(weather));
+            return new OkObjectResult(weather.CurrentWeather);
         }
         else
         {

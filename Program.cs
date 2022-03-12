@@ -8,7 +8,6 @@ builder.Services.AddHostedService<WeatherApi.Services.BOMWeather>();
 
 builder.Services.AddAutoMapper(typeof(WeatherApi.Model.Mapper.WeatherMapper));
 builder.Services.AddAutoMapper(typeof(WeatherApi.Model.Mapper.WeatherDataMapper));
-builder.Services.AddAutoMapper(typeof(WeatherApi.Model.Mapper.CurrentWeatherMapper));
 builder.Services.AddAutoMapper(typeof(WeatherApi.Model.Mapper.DatumMapper));
 
 builder.Host.ConfigureLogging(logging => logging.AddAzureWebAppDiagnostics());
