@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using WeatherApi.Model;
 using AutoMapper;
 using WeatherApi.Services;
 
