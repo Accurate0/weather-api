@@ -3,9 +3,9 @@
     "proxies": {
         "WeatherCurrent": {
             "matchCondition": {
-                "route": "/api/v1/{*path}"
+                "route": "/api/v1/weather/current"
             },
-            "backendUri": "https://weather-api-app-service.azurewebsites.net/{path}"
+            "backendUri": "https://weather-api-app-service.azurewebsites.net/Weather/Current"
         },
         "Fallback": {
             "matchCondition": {
