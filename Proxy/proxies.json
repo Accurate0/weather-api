@@ -3,9 +3,15 @@
     "proxies": {
         "WeatherCurrent": {
             "matchCondition": {
-                "route": "/api/v1/weather/current"
+                "route": "/api/v1/{*path}"
             },
-            "backendUri": "https://weather-api-app-service.azurewebsites.net/Weather/Current"
+            "backendUri": "https://weather-api-app-service.azurewebsites.net/{path}"
+        },
+        "Fallback": {
+            "matchCondition": {
+                "route": "*"
+            },
+            "backendUri": "https://anurag.sh"
         }
     }
 }
