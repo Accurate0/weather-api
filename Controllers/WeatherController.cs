@@ -30,7 +30,7 @@ public class WeatherController : ControllerBase
         if (city.ToLower().Equals("perth"))
         {
             var weather = await _database.GetLatestWeather();
-            return CreatedAtAction(nameof(Get), _mapper.Map<CurrentWeather>(weather));
+            return new OkObjectResult(_mapper.Map<CurrentWeather>(weather));
         }
         else
         {
