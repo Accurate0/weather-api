@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json.schemastore.org/proxies",
+    "proxies": {
+        "CurrentWeather": {
+            "matchCondition": {
+                "route": "/Weather/Current"
+            },
+            "backendUri": "https://weather-api-app-service.azurewebsites.net/Weather/Current"
+        }
+    }
+}
