@@ -7,7 +7,6 @@ namespace WeatherApi.Services
     {
         public readonly string DatabaseName = "WeatherDatabase";
         public readonly string ContainerName = "v1";
-        public readonly string LatestContainerName = "Latest";
         private ILogger<Database> _logger;
         private IConfiguration _config;
         private CosmosClient _client;
@@ -49,7 +48,6 @@ namespace WeatherApi.Services
         private async Task CreateContainerAsync()
         {
             _container = await _database.CreateContainerIfNotExistsAsync(ContainerName, "/Id");
-            _latestContainer = await _database.CreateContainerIfNotExistsAsync(LatestContainerName, "/Id");
         }
     }
 }
