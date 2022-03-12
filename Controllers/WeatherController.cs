@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using WeatherApi.Model;
 using AutoMapper;
 using WeatherApi.Services;
@@ -6,8 +7,8 @@ using WeatherApi.Services;
 namespace WeatherApi.Controllers;
 
 [ApiController]
-[Route("weather")]
-public class WeatherController : ControllerBase
+[Route("Weather")]
+public partial class WeatherController : ControllerBase
 {
     private readonly ILogger<WeatherController> _logger;
     private IConfiguration _configuration;
@@ -20,24 +21,5 @@ public class WeatherController : ControllerBase
         _configuration = configuration;
         _database = database;
         _mapper = mapper;
-    }
-
-    [HttpGet("current")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WeatherData.Weather))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Get([FromQuery] string location)
-    {
-        Location locationEnum;
-        var result = Enum.TryParse<Location>(location, true, out locationEnum);
-
-        if (result)
-        {
-            var weather = await _database.GetWeather(locationEnum);
-            return new OkObjectResult(weather.CurrentWeather);
-        }
-        else
-        {
-            return new BadRequestResult();
-        }
     }
 }

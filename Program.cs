@@ -1,13 +1,17 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<WeatherApi.Services.Database>();
-builder.Services.AddHostedService<WeatherApi.Services.BOMWeather>();
+builder.Services
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen()
+    .AddSingleton<WeatherApi.Services.Database>()
+    .AddAutoMapper(typeof(WeatherApi.Model.Mappers.WeatherMapper))
+    .AddAutoMapper(typeof(WeatherApi.Model.Mappers.WeatherDataMapper))
+    .AddControllers();
 
-builder.Services.AddAutoMapper(typeof(WeatherApi.Model.Mappers.WeatherMapper));
-builder.Services.AddAutoMapper(typeof(WeatherApi.Model.Mappers.WeatherDataMapper));
+if (builder.Configuration.GetValue<bool>("UseBOMWeatherService"))
+{
+    builder.Services.AddHostedService<WeatherApi.Services.BOMWeather>();
+}
 
 builder.Host.ConfigureLogging(logging => logging.AddAzureWebAppDiagnostics());
 
@@ -15,12 +19,13 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwagger()
+        .UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
+app.UseHttpsRedirection()
+    .UseAuthorization();
+
 app.MapControllers();
 
 // setup cosmosdb
