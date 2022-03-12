@@ -1,7 +1,7 @@
 {
     "$schema": "http://json.schemastore.org/proxies",
     "proxies": {
-        "CurrentWeather": {
+        "WeatherCurrent": {
             "matchCondition": {
                 "route": "/api/v1/weather/current"
             },
