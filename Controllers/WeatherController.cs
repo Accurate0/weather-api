@@ -25,14 +25,14 @@ public class WeatherController : ControllerBase
     [HttpGet("current")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CurrentWeather))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Get([FromQuery] string city)
+    public async Task<IActionResult> Get([FromQuery] string location)
     {
-        Location enumCity;
-        var result = Enum.TryParse<Location>(city, true, out enumCity);
+        Location locationEnum;
+        var result = Enum.TryParse<Location>(location, true, out locationEnum);
 
         if (result)
         {
-            var weather = await _database.GetWeather(enumCity);
+            var weather = await _database.GetWeather(locationEnum);
             return new OkObjectResult(_mapper.Map<CurrentWeather>(weather));
         }
         else
