@@ -1,5 +1,6 @@
-using WeatherApi.Extensions;
-using WeatherApi.Model;
+using LibWeather.Extensions;
+using LibWeather.Model;
+using WeatherApi.Services;
 using Newtonsoft.Json;
 using AutoMapper;
 
@@ -7,12 +8,6 @@ namespace WeatherApi.Services
 {
     public class BOMObservations : BackgroundService
     {
-        private readonly Dictionary<Location, string> FetchLocationUrls = new()
-        {
-            [Location.Perth] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94608.json",
-            [Location.PerthAirport] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94610.json",
-            [Location.RottnestIsland] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94602.json",
-        };
         private readonly ILogger<BOMObservations> _logger;
         private readonly Database _database;
         private readonly IMapper _mapper;

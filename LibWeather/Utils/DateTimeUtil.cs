@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace WeatherApi.Utils
+namespace LibWeather.Utils
 {
     public class DateTimeUtils
     {

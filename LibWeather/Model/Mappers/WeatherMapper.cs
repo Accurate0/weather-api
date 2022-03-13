@@ -1,7 +1,7 @@
 using AutoMapper;
-using WeatherApi.Utils;
+using LibWeather.Utils;
 
-namespace WeatherApi.Model.Mappers
+namespace LibWeather.Model.Mappers
 {
     public class WeatherMapper : Profile
     {

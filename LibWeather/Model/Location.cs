@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace WeatherApi.Model
+namespace LibWeather.Model
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum Location

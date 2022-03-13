@@ -1,6 +1,6 @@
-using WeatherApi.Model;
+using LibWeather.Model;
 
-namespace WeatherApi.Extensions
+namespace LibWeather.Extensions
 {
     public static class WeatherExtension
     {

@@ -1,5 +1,5 @@
 using Newtonsoft.Json;
-namespace WeatherApi.Model
+namespace LibWeather.Model
 {
     public class WeatherData
     {

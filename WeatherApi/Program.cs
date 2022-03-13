@@ -4,14 +4,9 @@ builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
     .AddSingleton<WeatherApi.Services.Database>()
-    .AddAutoMapper(typeof(WeatherApi.Model.Mappers.WeatherMapper))
-    .AddAutoMapper(typeof(WeatherApi.Model.Mappers.WeatherDataMapper))
+    .AddAutoMapper(typeof(LibWeather.Model.Mappers.WeatherMapper))
+    .AddAutoMapper(typeof(LibWeather.Model.Mappers.WeatherDataMapper))
     .AddControllers();
-
-if (builder.Configuration.GetValue<bool>("UseBOMObservationsService"))
-{
-    builder.Services.AddHostedService<WeatherApi.Services.BOMObservations>();
-}
 
 builder.Host.ConfigureLogging(logging => logging.AddAzureWebAppDiagnostics());
 

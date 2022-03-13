@@ -1,6 +1,6 @@
-using WeatherApi.Model;
+using LibWeather.Model;
 
-namespace WeatherApi.Utils
+namespace LibWeather.Utils
 {
     public class LocationUtil
     {

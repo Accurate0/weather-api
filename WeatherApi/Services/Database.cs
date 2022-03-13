@@ -1,12 +1,11 @@
 using Microsoft.Azure.Cosmos;
-using WeatherApi.Model;
+using LibWeather.Model;
+using LibWeather;
 
 namespace WeatherApi.Services
 {
     public class Database
     {
-        public readonly string DatabaseName = "WeatherDatabase";
-        public readonly string ContainerName = "v1";
         private ILogger<Database> _logger;
         private IConfiguration _config;
         private CosmosClient _client;
@@ -41,12 +40,12 @@ namespace WeatherApi.Services
 
         private async Task CreateDatabaseAsync()
         {
-            _database = await _client.CreateDatabaseIfNotExistsAsync(DatabaseName);
+            _database = await _client.CreateDatabaseIfNotExistsAsync(Constants.DatabaseName);
         }
 
         private async Task CreateContainerAsync()
         {
-            _container = await _database.CreateContainerIfNotExistsAsync(ContainerName, "/Id");
+            _container = await _database.CreateContainerIfNotExistsAsync(Constants.ContainerName, "/Id");
         }
     }
 }
