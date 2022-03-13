@@ -11,14 +11,11 @@ namespace WeatherApi.Extensions
                 throw new ArgumentException();
             }
 
-            return new WeatherData
-            {
-                Name = w1.Name,
-                HistorialWeather = w1.HistorialWeather.UnionBy(w2.HistorialWeather, d => d.Time).ToList(),
-                CurrentWeather = DateTime.Compare(w1.CurrentWeather.Time, w2.CurrentWeather.Time) >= 0
+            w1.HistorialWeather = w1.HistorialWeather.UnionBy(w2.HistorialWeather, d => d.Time).ToList();
+            w1.CurrentWeather = DateTime.Compare(w1.CurrentWeather.Time, w2.CurrentWeather.Time) >= 0
                                 ? w1.CurrentWeather
-                                : w2.CurrentWeather
-            };
+                                : w2.CurrentWeather;
+            return w1;
         }
     }
 }

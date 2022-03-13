@@ -42,8 +42,9 @@ namespace WeatherApi.Services
                     {
                         var tryGetWeather = await _database.GetWeather(kvp.Key);
                         var weatherInDatabase = tryGetWeather;
-                        var mergedWeather = weatherInDatabase.Merge(weather);
-                        await _database.AddWeather(mergedWeather);
+                        weatherInDatabase.Merge(weather);
+
+                        await _database.AddWeather(weatherInDatabase);
                     }
                     catch (Microsoft.Azure.Cosmos.CosmosException)
                     {
