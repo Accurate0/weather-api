@@ -1,4 +1,5 @@
 using AutoMapper;
+
 using LibWeather.Utils;
 
 namespace LibWeather.Model.Mappers

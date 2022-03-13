@@ -1,6 +1,7 @@
 using Microsoft.Azure.Cosmos;
-using LibWeather.Model;
+
 using LibWeather;
+using LibWeather.Model;
 
 namespace WeatherApi.Services
 {

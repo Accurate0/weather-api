@@ -7,7 +7,7 @@ namespace LibWeather
         public const string DatabaseName = "WeatherDatabase";
         public const string ContainerName = "v1";
 
-        private static Dictionary<Location, string> FetchLocationUrls = new()
+        public static Dictionary<Location, string> FetchLocationUrls = new()
         {
             [Location.Perth] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94608.json",
             [Location.PerthAirport] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94610.json",
