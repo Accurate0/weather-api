@@ -4,7 +4,7 @@ on:
     branches: [ main ]
     paths:
       - Proxy/**
-      - BackgroundService/**
+      - WeatherService/**
       - .github/workflows/fa.yml
 
 concurrency:
@@ -15,7 +15,7 @@ env:
   # must match resource name in tf
   AZURE_FUNCTION_PROXY: 'weather-api-fa'
   AZURE_FUNCTION_BACKGROUND: 'weather-background-fa'
-  PROJECT_PATH: 'BackgroundService'
+  PROJECT_PATH: 'WeatherService'
 
 jobs:
   deploy-proxy:
