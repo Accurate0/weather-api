@@ -12,7 +12,8 @@ concurrency:
 env:
   # must match app service resource name in tf
   AZURE_WEBAPP_NAME: weather-api-app-service
-  AZURE_WEBAPP_PACKAGE_PATH: 'WeatherApi'
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+  PROJECT_PATH: 'WeatherApi'
 
 jobs:
   deploy:
@@ -32,8 +33,8 @@ jobs:
     - name: dotnet build and publish
       run: |
         dotnet restore
-        dotnet build --configuration Release
-        dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weather-api'
+        dotnet build ${{ env.PROJECT_PATH }} --configuration Release
+        dotnet publish ${{ env.PROJECT_PATH }} -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/weather-api'
 
     # Deploy to Azure Web apps
     - name: Run Azure webapp deploy
