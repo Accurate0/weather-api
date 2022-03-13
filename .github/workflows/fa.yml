@@ -15,7 +15,6 @@ env:
   # must match resource name in tf
   AZURE_FUNCTION_PROXY: 'weather-api-fa'
   AZURE_FUNCTION_BACKGROUND: 'weather-background-fa'
-  AZURE_WEBAPP_PACKAGE_PATH: '.'
   PROJECT_PATH: 'BackgroundService'
 
 jobs:
@@ -54,15 +53,15 @@ jobs:
 
     - name: dotnet build and publish
       run: |
-        dotnet restore ${{ env.PROJECT_PATH }}
-        dotnet build ${{ env.PROJECT_PATH }} --configuration Release
-        dotnet publish ${{ env.PROJECT_PATH }} -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/background-service'
+        pushd ${{ env.PROJECT_PATH }}
+        dotnet restore
+        dotnet build --configuration Release --output './background-service'
 
     - name: 'Run Azure Functions deploy for background service'
       uses: azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTION_BACKGROUND }}
-        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/background-service'
+        package: '${{ env.PROJECT_PATH }}/background-service'
 
     - name: logout
       run: |
