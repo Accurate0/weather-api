@@ -5,7 +5,7 @@ using AutoMapper;
 
 namespace WeatherApi.Services
 {
-    public class BOMWeather : BackgroundService
+    public class BOMObservations : BackgroundService
     {
         private readonly Dictionary<Location, string> FetchLocationUrls = new()
         {
@@ -13,12 +13,12 @@ namespace WeatherApi.Services
             [Location.PerthAirport] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94610.json",
             [Location.RottnestIsland] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94602.json",
         };
-        private readonly ILogger<BOMWeather> _logger;
+        private readonly ILogger<BOMObservations> _logger;
         private readonly Database _database;
         private readonly IMapper _mapper;
         private static readonly HttpClient _client = new HttpClient();
 
-        public BOMWeather(ILogger<BOMWeather> logger, Database database, IMapper mapper)
+        public BOMObservations(ILogger<BOMObservations> logger, Database database, IMapper mapper)
         {
             _logger = logger;
             _database = database;

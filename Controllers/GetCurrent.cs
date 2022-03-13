@@ -4,7 +4,7 @@ using WeatherApi.Model;
 
 namespace WeatherApi.Controllers;
 
-public partial class WeatherController : ControllerBase
+public partial class ObservationController : ControllerBase
 {
     public class CurrentParameters
     {

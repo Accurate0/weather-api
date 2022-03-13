@@ -5,15 +5,15 @@ using WeatherApi.Services;
 namespace WeatherApi.Controllers;
 
 [ApiController]
-[Route("Weather")]
-public partial class WeatherController : ControllerBase
+[Route("Observations")]
+public partial class ObservationController : ControllerBase
 {
-    private readonly ILogger<WeatherController> _logger;
+    private readonly ILogger<ObservationController> _logger;
     private IConfiguration _configuration;
     private Database _database;
     private IMapper _mapper;
 
-    public WeatherController(ILogger<WeatherController> logger, IConfiguration configuration, Database database, IMapper mapper)
+    public ObservationController(ILogger<ObservationController> logger, IConfiguration configuration, Database database, IMapper mapper)
     {
         _logger = logger;
         _configuration = configuration;

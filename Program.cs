@@ -8,9 +8,9 @@ builder.Services
     .AddAutoMapper(typeof(WeatherApi.Model.Mappers.WeatherDataMapper))
     .AddControllers();
 
-if (builder.Configuration.GetValue<bool>("UseBOMWeatherService"))
+if (builder.Configuration.GetValue<bool>("UseBOMObservationsService"))
 {
-    builder.Services.AddHostedService<WeatherApi.Services.BOMWeather>();
+    builder.Services.AddHostedService<WeatherApi.Services.BOMObservations>();
 }
 
 builder.Host.ConfigureLogging(logging => logging.AddAzureWebAppDiagnostics());
