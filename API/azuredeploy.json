@@ -28,7 +28,7 @@
             "name": "general-apim/policy",
             "properties": {
                 "policyContent": "[concat(parameters('repoBaseUrl'), '/API/policy.xml'",
-                "contentFormat": "rawxml-link",
+                "contentFormat": "rawxml-link"
             }
         },
         {
