@@ -27,8 +27,8 @@
             "apiVersion": "2021-08-01",
             "name": "general-apim/policy",
             "properties": {
-                "policyContent": "[concat(parameters('repoBaseUrl'), '/API/policy.xml'",
-                "contentFormat": "rawxml-link"
+                "value": "[concat(parameters('repoBaseUrl'), '/API/policy.xml'",
+                "format": "rawxml-link"
             }
         },
         {
