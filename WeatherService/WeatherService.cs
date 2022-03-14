@@ -20,7 +20,7 @@ namespace WeatherService
     public class WeatherService
     {
         [FunctionName("WeatherService")]
-        public async Task Run([TimerTrigger("0 */30 * * * *")] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 15/30 * * * *")] TimerInfo myTimer, ILogger log)
         {
             var config = new ConfigurationBuilder()
                 .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
