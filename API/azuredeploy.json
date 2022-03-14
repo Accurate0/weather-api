@@ -1,46 +1,214 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "apiVersionSet": {
-            "value": {
-                "apiVersionSetName": "WeatherApi",
-                "displayName": "RACWA Member Event Publisher API"
-            }
+        "operations_GetCurrentObservation_type": {
+            "type": "SecureString"
         },
-        "serviceUrl": {
-            "value": ""
+        "operations_GetObservationHistory_type": {
+            "type": "SecureString"
         },
-        "apiInstance": {
-            "value": {
-                "version": "1",
-                "apiVersionSetName": "WeatherApi",
-                "name": "WeatherApi",
-                "path": "weather/api",
-                "displayName": "Weather API"
-            }
+        "operations_GetObservationHistory_type_1": {
+            "type": "SecureString"
         },
-        "apiPolicies": {
-            "value": [
-                {
-                    "apiIName": "WeatherApi",
-                    "content": "/API/policies/base.xml"
-                }
-            ]
-        },
-        "apiEndpoints": {
-            "value": [
-                {
-                    "apiIName": "WeatherApi",
-                    "endpointName": "GetCurrentObservation",
-                    "description": "Creates a new event request.",
-                    "path": "/Observations/Current",
-                    "method": "GET",
-                    "templateParameters": [],
-                    "request": {},
-                    "responses": []
-                }
-            ]
+        "service_general_apim_name": {
+            "defaultValue": "general-apim",
+            "type": "String"
         }
-    }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ApiManagement/service",
+            "apiVersion": "2021-08-01",
+            "name": "[parameters('service_general_apim_name')]",
+            "location": "Australia East",
+            "sku": {
+                "name": "Consumption",
+                "capacity": 0
+            },
+            "properties": {
+                "publisherEmail": "contact@anurag.sh",
+                "publisherName": "Anurag Singh",
+                "notificationSenderEmail": "apimgmt-noreply@mail.windowsazure.com",
+                "hostnameConfigurations": [
+                    {
+                        "type": "Proxy",
+                        "hostName": "[concat(parameters('service_general_apim_name'), '.azure-api.net')]",
+                        "negotiateClientCertificate": false,
+                        "defaultSslBinding": true,
+                        "certificateSource": "BuiltIn"
+                    }
+                ],
+                "customProperties": {
+                    "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Ssl30": "false",
+                    "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls10": "false",
+                    "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls11": "false",
+                    "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls10": "false",
+                    "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls11": "false",
+                    "Microsoft.WindowsAzure.ApiManagement.Gateway.Protocols.Server.Http2": "False"
+                },
+                "virtualNetworkType": "None",
+                "certificates": [],
+                "disableGateway": false,
+                "apiVersionConstraint": {},
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/api-version-sets",
+            "apiVersion": "2018-06-01-preview",
+            "name": "[concat(parameters('service_general_apim_name'), '/622f030a8d1a7ec6484330ca')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service', parameters('service_general_apim_name'))]"
+            ],
+            "properties": {
+                "displayName": "Weather API",
+                "versioningScheme": "Segment"
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apiVersionSets",
+            "apiVersion": "2021-08-01",
+            "name": "[concat(parameters('service_general_apim_name'), '/622f030a8d1a7ec6484330ca')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service', parameters('service_general_apim_name'))]"
+            ],
+            "properties": {
+                "displayName": "Weather API",
+                "versioningScheme": "Segment"
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/backends",
+            "apiVersion": "2021-08-01",
+            "name": "[concat(parameters('service_general_apim_name'), '/WeatherAPI')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service', parameters('service_general_apim_name'))]"
+            ],
+            "properties": {
+                "url": "https://weather-api-app-service.azurewebsites.net",
+                "protocol": "http",
+                "resourceId": "https://management.azure.com/subscriptions/c7008aa0-d779-4a2e-acec-d82e5e3beebe/resourceGroups/weather-api-group/providers/Microsoft.Web/sites/weather-api-app-service",
+                "credentials": {
+                    "query": {},
+                    "header": {}
+                },
+                "tls": {
+                    "validateCertificateChain": true,
+                    "validateCertificateName": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/policies",
+            "apiVersion": "2021-08-01",
+            "name": "[concat(parameters('service_general_apim_name'), '/policy')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service', parameters('service_general_apim_name'))]"
+            ],
+            "properties": {
+                "value": "<!--\r\n    IMPORTANT:\r\n    - Policy elements can appear only within the <inbound>, <outbound>, <backend> section elements.\r\n    - Only the <forward-request> policy element can appear within the <backend> section element.\r\n    - To apply a policy to the incoming request (before it is forwarded to the backend service), place a corresponding policy element within the <inbound> section element.\r\n    - To apply a policy to the outgoing response (before it is sent back to the caller), place a corresponding policy element within the <outbound> section element.\r\n    - To add a policy position the cursor at the desired insertion point and click on the round button associated with the policy.\r\n    - To remove a policy, delete the corresponding policy statement from the policy document.\r\n    - Policies are applied in the order of their appearance, from the top down.\r\n-->\r\n<policies>\r\n  <inbound></inbound>\r\n  <backend>\r\n    <forward-request />\r\n  </backend>\r\n  <outbound></outbound>\r\n</policies>",
+                "format": "xml"
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/subscriptions",
+            "apiVersion": "2021-08-01",
+            "name": "[concat(parameters('service_general_apim_name'), '/master')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service', parameters('service_general_apim_name'))]"
+            ],
+            "properties": {
+                "scope": "[concat(resourceId('Microsoft.ApiManagement/service', parameters('service_general_apim_name')), '/')]",
+                "displayName": "Built-in all-access subscription",
+                "state": "active",
+                "allowTracing": true
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis",
+            "apiVersion": "2021-08-01",
+            "name": "[concat(parameters('service_general_apim_name'), '/WeatherApi')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service', parameters('service_general_apim_name'))]",
+                "[resourceId('Microsoft.ApiManagement/service/apiVersionSets', parameters('service_general_apim_name'), '622f030a8d1a7ec6484330ca')]"
+            ],
+            "properties": {
+                "displayName": "Weather API",
+                "apiRevision": "1",
+                "subscriptionRequired": true,
+                "serviceUrl": "https://weather-api-app-service.azurewebsites.net",
+                "path": "weather",
+                "protocols": [
+                    "https"
+                ],
+                "isCurrent": true,
+                "apiVersion": "v1",
+                "apiVersionSetId": "[resourceId('Microsoft.ApiManagement/service/apiVersionSets', parameters('service_general_apim_name'), '622f030a8d1a7ec6484330ca')]"
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations",
+            "apiVersion": "2021-08-01",
+            "name": "[concat(parameters('service_general_apim_name'), '/WeatherApi/GetCurrentObservation')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_general_apim_name'), 'WeatherApi')]",
+                "[resourceId('Microsoft.ApiManagement/service', parameters('service_general_apim_name'))]"
+            ],
+            "properties": {
+                "displayName": "GetCurrentObservation",
+                "method": "GET",
+                "urlTemplate": "/observations/current",
+                "templateParameters": [],
+                "request": {
+                    "queryParameters": [
+                        {
+                            "name": "location",
+                            "required": true,
+                            "values": [],
+                            "type": "[parameters('operations_GetCurrentObservation_type')]"
+                        }
+                    ],
+                    "headers": [],
+                    "representations": []
+                },
+                "responses": []
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations",
+            "apiVersion": "2021-08-01",
+            "name": "[concat(parameters('service_general_apim_name'), '/WeatherApi/GetObservationHistory')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_general_apim_name'), 'WeatherApi')]",
+                "[resourceId('Microsoft.ApiManagement/service', parameters('service_general_apim_name'))]"
+            ],
+            "properties": {
+                "displayName": "GetObservationHistory",
+                "method": "GET",
+                "urlTemplate": "/observations/history",
+                "templateParameters": [],
+                "request": {
+                    "queryParameters": [
+                        {
+                            "name": "location",
+                            "required": true,
+                            "values": [],
+                            "type": "[parameters('operations_GetObservationHistory_type')]"
+                        },
+                        {
+                            "name": "count",
+                            "required": true,
+                            "values": [],
+                            "type": "[parameters('operations_GetObservationHistory_type_1')]"
+                        }
+                    ],
+                    "headers": [],
+                    "representations": []
+                },
+                "responses": []
+            }
+        }
+    ]
 }
