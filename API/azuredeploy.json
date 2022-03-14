@@ -23,24 +23,6 @@
             }
         },
         {
-            "type": "Microsoft.ApiManagement/service/backends",
-            "apiVersion": "2021-08-01",
-            "name": "general-apim/WeatherAPI",
-            "properties": {
-                "url": "https://weather-api-app-service.azurewebsites.net",
-                "protocol": "http",
-                "resourceId": "https://management.azure.com/subscriptions/c7008aa0-d779-4a2e-acec-d82e5e3beebe/resourceGroups/weather-api-group/providers/Microsoft.Web/sites/weather-api-app-service",
-                "credentials": {
-                    "query": {},
-                    "header": {}
-                },
-                "tls": {
-                    "validateCertificateChain": true,
-                    "validateCertificateName": true
-                }
-            }
-        },
-        {
             "type": "Microsoft.ApiManagement/service/policies",
             "apiVersion": "2021-08-01",
             "name": "general-apim/policy",
