@@ -43,7 +43,8 @@
                 "serviceUrl": "https://weather-api-app-service.azurewebsites.net",
                 "path": "weather",
                 "protocols": [
-                    "https"
+                    "https",
+                    "http"
                 ],
                 "isCurrent": true,
                 "apiVersion": "v1",
