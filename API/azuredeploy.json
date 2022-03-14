@@ -99,20 +99,6 @@
             }
         },
         {
-            "type": "Microsoft.ApiManagement/service/subscriptions",
-            "apiVersion": "2021-08-01",
-            "name": "general-apim/master",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service', 'general-apim')]"
-            ],
-            "properties": {
-                "scope": "[concat(resourceId('Microsoft.ApiManagement/service', 'general-apim'), '/')]",
-                "displayName": "Built-in all-access subscription",
-                "state": "active",
-                "allowTracing": true
-            }
-        },
-        {
             "type": "Microsoft.ApiManagement/service/apis",
             "apiVersion": "2021-08-01",
             "name": "general-apim/WeatherApi",
