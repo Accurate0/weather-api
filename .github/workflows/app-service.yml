@@ -2,11 +2,9 @@ name: app-service
 on:
   push:
     branches: [ main ]
-    paths-ignore:
-      - Proxy/**
-      - WeatherService/**
-      - .github/workflows/proxy.yml
-      - .github/workflows/service.yml
+    paths:
+      - WeatherApi/**
+      - .github/workflows/app-service.yml
 
 concurrency:
   group: environment-${{ github.ref }}-${{ github.workflow }}
