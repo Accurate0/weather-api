@@ -3,7 +3,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - Proxy/**
+      - API/**
       - .github/workflows/proxy.yml
 
 concurrency:
@@ -28,7 +28,7 @@ jobs:
       uses: azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTION_PROXY }}
-        package: './Proxy'
+        package: './API'
 
     - name: logout
       run: |

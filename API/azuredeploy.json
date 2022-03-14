@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "apiVersionSet": {
+            "value": {
+                "apiVersionSetName": "WeatherApi",
+                "displayName": "RACWA Member Event Publisher API"
+            }
+        },
+        "serviceUrl": {
+            "value": ""
+        },
+        "apiInstance": {
+            "value": {
+                "version": "1",
+                "apiVersionSetName": "WeatherApi",
+                "name": "WeatherApi",
+                "path": "weather/api",
+                "displayName": "Weather API"
+            }
+        },
+        "apiPolicies": {
+            "value": [
+                {
+                    "apiIName": "WeatherApi",
+                    "content": "/API/policies/base.xml"
+                }
+            ]
+        },
+        "apiEndpoints": {
+            "value": [
+                {
+                    "apiIName": "WeatherApi",
+                    "endpointName": "GetCurrentObservation",
+                    "description": "Creates a new event request.",
+                    "path": "/Observations/Current",
+                    "method": "GET",
+                    "templateParameters": [],
+                    "request": {},
+                    "responses": []
+                }
+            ]
+        }
+    }
+}
