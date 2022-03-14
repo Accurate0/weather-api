@@ -1,11 +1,10 @@
-name: fa
+name: service
 on:
   push:
     branches: [ main ]
     paths:
-      - Proxy/**
       - WeatherService/**
-      - .github/workflows/fa.yml
+      - .github/workflows/service.yml
 
 concurrency:
   group: environment-${{ github.ref }}-${{ github.workflow }}
@@ -13,31 +12,11 @@ concurrency:
 
 env:
   # must match resource name in tf
-  AZURE_FUNCTION_PROXY: 'weather-api-fa'
   AZURE_FUNCTION_BACKGROUND: 'weather-background-fa'
   PROJECT_PATH: 'WeatherService'
 
 jobs:
-  deploy-proxy:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: 'Run Azure Functions deploy for proxy'
-      uses: azure/functions-action@v1
-      with:
-        app-name: ${{ env.AZURE_FUNCTION_PROXY }}
-        package: './Proxy'
-
-    - name: logout
-      run: |
-        az logout
-
-  deploy-service:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
