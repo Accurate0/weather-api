@@ -5,7 +5,8 @@ on:
     paths-ignore:
       - Proxy/**
       - WeatherService/**
-      - .github/workflows/fa.yml
+      - .github/workflows/proxy.yml
+      - .github/workflows/service.yml
 
 concurrency:
   group: environment-${{ github.ref }}-${{ github.workflow }}
