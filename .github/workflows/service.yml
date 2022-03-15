@@ -16,7 +16,8 @@ env:
   PROJECT_PATH: 'WeatherService'
 
 jobs:
-  deploy:
+  deploy-function:
+      if: ${{ false }}
     runs-on: ubuntu-latest
 
     steps:
@@ -46,7 +47,7 @@ jobs:
       run: |
         az logout
 
-  deploy2:
+  deploy-lambda:
     runs-on: ubuntu-latest
 
     steps:
