@@ -23,4 +23,4 @@ jobs:
       uses: azure/arm-deploy@v1
       with:
         resourceGroupName: 'general-api-group'
-        template: ./API/azuredeploy.json
+        template: ./API/weather-api-deploy.json
