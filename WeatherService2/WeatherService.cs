@@ -29,7 +29,6 @@ public class WeatherService
         var database = new CosmosClient(connectionString);
         var container = database.GetContainer(Constants.DatabaseName, Constants.ContainerName);
 
-
         var mapperConfig = new MapperConfiguration(cfg =>
         {
             cfg.AddProfile<WeatherDataMapper>();
