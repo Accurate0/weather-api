@@ -6,7 +6,7 @@
     "resources": [
         {
             "type": "Microsoft.ApiManagement/service/apiVersionSets",
-            "apiVersion": "2021-08-01",
+            "apiVersion": "2019-01-01",
             "name": "general-apim/622f030a8d1a7ec6484330ca",
             "properties": {
                 "displayName": "Weather API",
