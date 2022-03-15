@@ -4,6 +4,7 @@ on:
     branches: [ main ]
     paths:
       - WeatherService/**
+      - WeatherService2/**
       - .github/workflows/service.yml
 
 concurrency:
