@@ -17,7 +17,7 @@ env:
 
 jobs:
   deploy-function:
-      if: ${{ false }}
+    if: ${{ false }}
     runs-on: ubuntu-latest
 
     steps:
