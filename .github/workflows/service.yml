@@ -69,4 +69,4 @@ jobs:
     - name: dotnet build and publish
       run: |
         cd WeatherService2
-        dotnet lambda deploy-function WeatherService --function-role iam_for_weather_service
+        dotnet lambda deploy-function WeatherService
