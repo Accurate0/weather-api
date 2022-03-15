@@ -73,4 +73,4 @@ jobs:
         dotnet lambda deploy-function WeatherService
 
     - name: Increment lambda version
-      run: aws lambda publish-version --function-name WeatherService
+      run: aws lambda publish-version --function-name WeatherService | jq '.Environment.Variables.cosmosdb_connection_string = "REDACTED"'
