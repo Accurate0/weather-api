@@ -1,0 +1,102 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ApiManagement/service/apiVersionSets",
+            "apiVersion": "2019-01-01",
+            "name": "general-apim/622f030a8d1a7ec6484330ca",
+            "properties": {
+                "displayName": "Weather API",
+                "versioningScheme": "Segment"
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/policies",
+            "apiVersion": "2021-08-01",
+            "name": "general-apim/policy",
+            "properties": {
+                "value": "<!--\r\n    IMPORTANT:\r\n    - Policy elements can appear only within the <inbound>, <outbound>, <backend> section elements.\r\n    - Only the <forward-request> policy element can appear within the <backend> section element.\r\n    - To apply a policy to the incoming request (before it is forwarded to the backend service), place a corresponding policy element within the <inbound> section element.\r\n    - To apply a policy to the outgoing response (before it is sent back to the caller), place a corresponding policy element within the <outbound> section element.\r\n    - To add a policy position the cursor at the desired insertion point and click on the round button associated with the policy.\r\n    - To remove a policy, delete the corresponding policy statement from the policy document.\r\n    - Policies are applied in the order of their appearance, from the top down.\r\n-->\r\n<policies>\r\n  <inbound></inbound>\r\n  <backend>\r\n    <forward-request />\r\n  </backend>\r\n  <outbound></outbound>\r\n</policies>",
+                "format": "xml"
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis",
+            "apiVersion": "2021-08-01",
+            "name": "general-apim/WeatherApi",
+            "dependsOn": [],
+            "properties": {
+                "displayName": "Weather API",
+                "apiRevision": "1",
+                "subscriptionRequired": false,
+                "serviceUrl": "https://weather-api-app-service.azurewebsites.net",
+                "path": "weather",
+                "protocols": [
+                    "https",
+                    "http"
+                ],
+                "isCurrent": true,
+                "apiVersion": "v1",
+                "apiVersionSetId": "[resourceId('Microsoft.ApiManagement/service/apiVersionSets', 'general-apim', '622f030a8d1a7ec6484330ca')]"
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations",
+            "apiVersion": "2021-08-01",
+            "name": "general-apim/WeatherApi/GetCurrentObservation",
+            "dependsOn": [],
+            "properties": {
+                "displayName": "GetCurrentObservation",
+                "method": "GET",
+                "urlTemplate": "/observations/current",
+                "templateParameters": [],
+                "request": {
+                    "queryParameters": [
+                        {
+                            "name": "location",
+                            "required": true,
+                            "values": [],
+                            "type": "string"
+                        }
+                    ],
+                    "headers": [],
+                    "representations": []
+                },
+                "responses": []
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations",
+            "apiVersion": "2021-08-01",
+            "name": "general-apim/WeatherApi/GetObservationHistory",
+            "dependsOn": [],
+            "properties": {
+                "displayName": "GetObservationHistory",
+                "method": "GET",
+                "urlTemplate": "/observations/history",
+                "templateParameters": [],
+                "request": {
+                    "queryParameters": [
+                        {
+                            "name": "location",
+                            "required": true,
+                            "values": [],
+                            "type": "string"
+                        },
+                        {
+                            "name": "count",
+                            "required": true,
+                            "values": [],
+                            "type": "int"
+                        }
+                    ],
+                    "headers": [],
+                    "representations": []
+                },
+                "responses": []
+            }
+        }
+    ]
+}
