@@ -70,3 +70,6 @@ jobs:
       run: |
         cd WeatherService2
         dotnet lambda deploy-function WeatherService
+
+    - name: Increment lambda version
+      run: aws lambda publish-version --function-name WeatherService
