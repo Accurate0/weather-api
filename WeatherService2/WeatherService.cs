@@ -14,15 +14,14 @@ using LibWeather.Model.Mappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace WeatherService2;
+namespace WeatherService;
 
-public class Function
+public class WeatherService
 {
 
-    public async Task FunctionHandler(ILambdaContext context)
+    public async Task Run(ILambdaContext context)
     {
         var connectionString = Environment.GetEnvironmentVariable("cosmosdb_connection_string");
 
