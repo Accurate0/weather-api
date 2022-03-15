@@ -10,6 +10,6 @@
   "configuration": "Release",
   "function-runtime": "dotnet6",
   "function-memory-size": 256,
-  "function-timeout": 30,
+  "function-timeout": 60,
   "function-handler": "WeatherService::WeatherService.WeatherService::Run"
 }
