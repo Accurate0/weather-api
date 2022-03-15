@@ -5,15 +5,6 @@
     "variables": {},
     "resources": [
         {
-            "type": "Microsoft.ApiManagement/service/api-version-sets",
-            "apiVersion": "2018-06-01-preview",
-            "name": "general-apim/622f030a8d1a7ec6484330ca",
-            "properties": {
-                "displayName": "Weather API",
-                "versioningScheme": "Segment"
-            }
-        },
-        {
             "type": "Microsoft.ApiManagement/service/apiVersionSets",
             "apiVersion": "2021-08-01",
             "name": "general-apim/622f030a8d1a7ec6484330ca",
