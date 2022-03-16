@@ -10,11 +10,8 @@ namespace WeatherApi.Controllers;
 [Route("Heartbeat")]
 public class HeartbeatController : ControllerBase
 {
-    private readonly ILogger<HeartbeatController> _logger;
-
-    public HeartbeatController(ILogger<HeartbeatController> logger, IConfiguration configuration, Database database, IMapper mapper)
+    public HeartbeatController()
     {
-        _logger = logger;
     }
 
     [HttpGet]

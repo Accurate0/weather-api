@@ -3,7 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
-    .AddSingleton<WeatherApi.Services.Database>()
+    .AddSingleton<WeatherApi.Services.DatabaseService>()
     .AddAutoMapper(typeof(LibWeather.Model.Mappers.WeatherMapper))
     .AddAutoMapper(typeof(LibWeather.Model.Mappers.WeatherDataMapper))
     .AddControllers();
@@ -24,6 +24,6 @@ app.UseHttpsRedirection()
 app.MapControllers();
 
 // setup cosmosdb
-await app.Services.GetRequiredService<WeatherApi.Services.Database>().InitAsync();
+await app.Services.GetRequiredService<WeatherApi.Services.DatabaseService>().InitAsync();
 
 app.Run();

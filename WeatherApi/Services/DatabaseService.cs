@@ -5,15 +5,15 @@ using LibWeather.Model;
 
 namespace WeatherApi.Services
 {
-    public class Database
+    public class DatabaseService
     {
-        private ILogger<Database> _logger;
+        private ILogger<DatabaseService> _logger;
         private IConfiguration _config;
         private CosmosClient _client;
-        private Microsoft.Azure.Cosmos.Database _database;
+        private Database _database;
         private Container _container;
 
-        public Database(IConfiguration configuration, ILogger<Database> logger)
+        public DatabaseService(IConfiguration configuration, ILogger<DatabaseService> logger)
         {
             _logger = logger;
             _config = configuration;

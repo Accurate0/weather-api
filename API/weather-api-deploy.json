@@ -106,6 +106,26 @@
                 },
                 "responses": []
             }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations",
+            "apiVersion": "2017-03-01",
+            "name": "general-apim/WeatherApi/GetServiceLastUpdate",
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', 'general-apim', 'WeatherApi')]"
+            ],
+            "properties": {
+                "displayName": "GetServiceLastUpdate",
+                "method": "GET",
+                "urlTemplate": "/service/lastupdate",
+                "templateParameters": [],
+                "request": {
+                    "queryParameters": [],
+                    "headers": [],
+                    "representations": []
+                },
+                "responses": []
+            }
         }
     ]
 }
