@@ -36,6 +36,7 @@ public class WeatherService
         });
 
         IMapper mapper = new Mapper(mapperConfig);
+        var now = DateTime.Now;
 
         foreach (var kvp in Constants.FetchLocationUrls)
         {
@@ -45,7 +46,7 @@ public class WeatherService
             var json = await resp.Content.ReadAsStringAsync();
             var weatherStationData = JsonConvert.DeserializeObject<WeatherStationData>(json);
             var weather = mapper.Map<WeatherData>(weatherStationData);
-            weather.LastUpdate = DateTime.Now;
+            weather.LastUpdate = now;
 
             try
             {
