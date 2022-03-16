@@ -79,8 +79,8 @@ jobs:
 
     - name: Test execute function
       run: |
-      RET=$(aws lambda invoke --function-name WeatherService output)
-      echo "$RET"
-      cat output
-      [ -s output ] && exit 1
-      [ "$(echo $RET | jq '.StatusCode')" != "200" ] && exit 1
+        RET=$(aws lambda invoke --function-name WeatherService output)
+        echo "$RET"
+        cat output
+        [ -s output ] && exit 1
+        [ "$(echo $RET | jq '.StatusCode')" != "200" ] && exit 1
