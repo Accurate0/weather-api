@@ -16,8 +16,8 @@ namespace LibWeather.Model
         }
         [JsonProperty("id")]
         public Location Name { get; set; }
+        public DateTime LastUpdate { get; set; }
         public Weather CurrentWeather { get; set; }
         public List<Weather> HistorialWeather { get; set; }
-        public DateTime LastUpdate { get; set; }
     }
 }
