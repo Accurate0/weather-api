@@ -15,6 +15,11 @@ namespace LibWeather.Extensions
             w1.CurrentWeather = DateTime.Compare(w1.CurrentWeather.Time, w2.CurrentWeather.Time) >= 0
                                 ? w1.CurrentWeather
                                 : w2.CurrentWeather;
+
+            w1.LastUpdate = DateTime.Compare(w1.LastUpdate, w2.LastUpdate) >= 0
+                    ? w1.LastUpdate
+                    : w2.LastUpdate;
+
             return w1;
         }
     }

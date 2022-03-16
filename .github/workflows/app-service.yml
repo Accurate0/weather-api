@@ -4,6 +4,7 @@ on:
     branches: [ main ]
     paths:
       - WeatherApi/**
+      - LibWeather/**
       - .github/workflows/app-service.yml
 
 concurrency:

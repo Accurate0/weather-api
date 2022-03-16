@@ -5,6 +5,7 @@ on:
     paths:
       - WeatherService/**
       - WeatherService2/**
+      - LibWeather/**
       - .github/workflows/service.yml
 
 concurrency:
