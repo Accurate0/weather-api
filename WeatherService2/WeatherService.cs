@@ -1,4 +1,3 @@
-using System.Net.Http;
 
 using Microsoft.Azure.Cosmos;
 
@@ -12,7 +11,6 @@ using LibWeather.Model;
 using LibWeather.Model.Mappers;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
@@ -26,8 +24,9 @@ public class WeatherService
         var connectionString = Environment.GetEnvironmentVariable("cosmosdb_connection_string");
 
         var client = new HttpClient();
-        var database = new CosmosClient(connectionString);
-        var container = database.GetContainer(Constants.DatabaseName, Constants.ContainerName);
+        var cosmosClient = new CosmosClient(connectionString);
+        Database database = await cosmosClient.CreateDatabaseIfNotExistsAsync(Constants.DatabaseName);
+        Container container = await database.CreateContainerIfNotExistsAsync(Constants.ContainerName, "/Id");
 
         var mapperConfig = new MapperConfiguration(cfg =>
         {
