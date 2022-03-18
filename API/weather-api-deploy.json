@@ -69,7 +69,16 @@
                         }
                     ],
                     "headers": [],
-                    "representations": []
+                    "representations": [
+                        {
+                            "statusCode": 200,
+                            "contentType": "application/json"
+                        },
+                        {
+                            "statusCode": 400,
+                            "contentType": "application/json"
+                        }
+                    ]
                 },
                 "responses": []
             }
@@ -102,7 +111,16 @@
                         }
                     ],
                     "headers": [],
-                    "representations": []
+                    "representations": [
+                        {
+                            "statusCode": 200,
+                            "contentType": "application/json"
+                        },
+                        {
+                            "statusCode": 400,
+                            "contentType": "application/json"
+                        }
+                    ]
                 },
                 "responses": []
             }
@@ -124,7 +142,12 @@
                     "headers": [],
                     "representations": []
                 },
-                "responses": []
+                "responses": [
+                    {
+                        "statusCode": 200,
+                        "contentType": "application/json"
+                    }
+                ]
             }
         }
     ]
