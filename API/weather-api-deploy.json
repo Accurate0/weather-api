@@ -169,6 +169,30 @@
                     }
                 ]
             }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations",
+            "apiVersion": "2017-03-01",
+            "name": "general-apim/WeatherApi/Heartbeat",
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', 'general-apim', 'WeatherApi')]"
+            ],
+            "properties": {
+                "displayName": "Heartbeat",
+                "method": "GET",
+                "urlTemplate": "/heartbeat",
+                "templateParameters": [],
+                "request": {
+                    "queryParameters": [],
+                    "headers": [],
+                    "representations": []
+                },
+                "responses": [
+                    {
+                        "statusCode": 204
+                    }
+                ]
+            }
         }
     ]
 }
