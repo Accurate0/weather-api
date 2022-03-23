@@ -5,55 +5,10 @@
     "variables": {},
     "resources": [
         {
-            "type": "Microsoft.ApiManagement/service/api-version-sets",
-            "apiVersion": "2017-03-01",
-            "name": "general-apim/WeatherApiSegment",
-            "properties": {
-                "displayName": "Weather API",
-                "versioningScheme": "Segment"
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/apis/policies",
-            "apiVersion": "2019-01-01",
-            "name": "general-apim/WeatherApi/policy",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service/apis', 'general-apim', 'WeatherApi')]"
-            ],
-            "properties": {
-                "value": "<policies>\r\n<inbound>\r\n<base />\r\n</inbound>\r\n<backend>\r\n<base />\r\n</backend>\r\n<outbound>\r\n<base />\r\n</outbound>\r\n<on-error>\r\n<base />\r\n</on-error>\r\n</policies>",
-                "format": "xml"
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/apis",
-            "apiVersion": "2017-03-01",
-            "name": "general-apim/WeatherApi",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service/api-version-sets', 'general-apim', 'WeatherApiSegment')]"
-            ],
-            "properties": {
-                "displayName": "Weather API",
-                "apiRevision": "1",
-                "subscriptionRequired": false,
-                "serviceUrl": "https://weather-api-app-service.azurewebsites.net",
-                "path": "weather",
-                "protocols": [
-                    "https",
-                    "http"
-                ],
-                "isCurrent": true,
-                "apiVersion": "v1",
-                "apiVersionSetId": "[resourceId('Microsoft.ApiManagement/service/api-version-sets', 'general-apim', 'WeatherApiSegment')]"
-            }
-        },
-        {
             "type": "Microsoft.ApiManagement/service/apis/operations",
             "apiVersion": "2017-03-01",
-            "name": "general-apim/WeatherApi/GetCurrentObservation",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service/apis', 'general-apim', 'WeatherApi')]"
-            ],
+            "name": "general-apim/Weather-API-v1/GetCurrentObservation",
+            "dependsOn": [],
             "properties": {
                 "displayName": "GetCurrentObservation",
                 "method": "GET",
@@ -94,10 +49,8 @@
         {
             "type": "Microsoft.ApiManagement/service/apis/operations",
             "apiVersion": "2017-03-01",
-            "name": "general-apim/WeatherApi/GetObservationHistory",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service/apis', 'general-apim', 'WeatherApi')]"
-            ],
+            "name": "general-apim/Weather-API-v1/GetObservationHistory",
+            "dependsOn": [],
             "properties": {
                 "displayName": "GetObservationHistory",
                 "method": "GET",
@@ -144,10 +97,8 @@
         {
             "type": "Microsoft.ApiManagement/service/apis/operations",
             "apiVersion": "2017-03-01",
-            "name": "general-apim/WeatherApi/GetServiceLastUpdate",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service/apis', 'general-apim', 'WeatherApi')]"
-            ],
+            "name": "general-apim/Weather-API-v1/GetServiceLastUpdate",
+            "dependsOn": [],
             "properties": {
                 "displayName": "GetServiceLastUpdate",
                 "method": "GET",
@@ -173,10 +124,8 @@
         {
             "type": "Microsoft.ApiManagement/service/apis/operations",
             "apiVersion": "2017-03-01",
-            "name": "general-apim/WeatherApi/Heartbeat",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service/apis', 'general-apim', 'WeatherApi')]"
-            ],
+            "name": "general-apim/Weather-API-v1/Heartbeat",
+            "dependsOn": [],
             "properties": {
                 "displayName": "Heartbeat",
                 "method": "GET",
