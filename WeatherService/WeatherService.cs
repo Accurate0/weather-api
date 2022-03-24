@@ -74,7 +74,7 @@ public class WeatherService
                 WeatherData weatherInDatabase = tryGetWeather.Resource;
                 if (!weatherInDatabase.Version.HasValue || weatherInDatabase.Version < weather.Version)
                 {
-                    context.Logger.LogWarning($"{kvp.Key.ToString()}: Database has version ${weatherInDatabase.Version}, current is ${weather.Version}");
+                    context.Logger.LogWarning($"{kvp.Key.ToString()}: Database has version {weatherInDatabase.Version}, current is {weather.Version}");
                     context.Logger.LogWarning($"{kvp.Key.ToString()}: Replacing data instead...");
                     // Don't merge, replace instead
                     weather.Version = WeatherData.CurrentVersion;
@@ -82,9 +82,9 @@ public class WeatherService
                 }
                 else if (weatherInDatabase.Version > weather.Version)
                 {
-                    context.Logger.LogCritical($"{kvp.Key.ToString()}: Database has version ${weatherInDatabase.Version}, current is ${weather.Version}");
-                    context.Logger.LogCritical("this makes no sense...");
-                    throw new Exception();
+                    context.Logger.LogCritical($"{kvp.Key.ToString()}: Database has version \"{weatherInDatabase.Version}\", current is \"{weather.Version}\"");
+                    context.Logger.LogCritical($"{kvp.Key.ToString()}: this makes no sense...");
+                    throw new InvalidDataException("Data is inconsistent, aborting...");
                 }
                 else
                 {
