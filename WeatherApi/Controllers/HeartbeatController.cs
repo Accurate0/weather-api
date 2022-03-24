@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 
-using AutoMapper;
-
 using WeatherApi.Services;
 
 namespace WeatherApi.Controllers;
