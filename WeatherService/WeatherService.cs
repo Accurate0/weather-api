@@ -88,7 +88,7 @@ public class WeatherService
                 }
                 else
                 {
-                    context.Logger.LogWarning($"{kvp.Key.ToString()}: Merging with current data...");
+                    context.Logger.LogInformation($"{kvp.Key.ToString()}: Merging with current data...");
                     weatherInDatabase.Merge(weather);
                     await container.UpsertItemAsync<WeatherData>(weatherInDatabase);
                 }
