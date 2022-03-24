@@ -10,14 +10,27 @@ namespace WeatherApi.Controllers;
 [Route("Heartbeat")]
 public class HeartbeatController : ControllerBase
 {
-    public HeartbeatController()
+    private DatabaseService _databaseService;
+    public HeartbeatController(DatabaseService databaseService)
     {
+        _databaseService = databaseService;
     }
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public IActionResult GetHeartbeat()
+    public async Task<IActionResult> GetHeartbeat()
     {
-        return new NoContentResult();
+        var t = _databaseService.Heartbeat();
+        await t;
+
+        // check cosmosdb connection
+        if (t.IsCompletedSuccessfully)
+        {
+            return new NoContentResult();
+        }
+        else
+        {
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
     }
 }

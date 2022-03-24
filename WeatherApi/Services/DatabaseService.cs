@@ -66,5 +66,10 @@ namespace WeatherApi.Services
         {
             _container = await _database.CreateContainerIfNotExistsAsync(Constants.ContainerName, "/Id");
         }
+
+        public Task Heartbeat()
+        {
+            return _client.ReadAccountAsync();
+        }
     }
 }
