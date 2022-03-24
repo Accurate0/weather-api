@@ -28,7 +28,13 @@ public partial class ObservationController : ControllerBase
         }
         else
         {
-            return new BadRequestResult();
+            var locationList = Enum.GetNames<Location>()
+                                .Where(x => x != "Unknown")
+                                .Aggregate((s, current) => $"{s}, {current}");
+            return new BadRequestObjectResult(new
+            {
+                message = $"Location must be one of {locationList}"
+            });
         }
     }
 }

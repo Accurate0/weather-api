@@ -34,6 +34,26 @@ public partial class ObservationController : ControllerBase
         }
         else
         {
+            if (location == Location.Unknown)
+            {
+                var locationList = Enum.GetNames<Location>()
+                                    .Where(x => x != "Unknown")
+                                    .Aggregate((s, current) => $"{s}, {current}");
+                return new BadRequestObjectResult(new
+                {
+                    message = $"Location must be one of {locationList}"
+                });
+            }
+
+            if (parameters.Count <= 0)
+            {
+                return new BadRequestObjectResult(new
+                {
+                    message = $"Count must be greater than 0"
+                });
+            }
+
+            // literally won't happen
             return new BadRequestResult();
         }
     }
