@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 using LibWeather.Model;
+using LibWeather.Utils;
 
 namespace WeatherApi.Controllers;
 
@@ -20,14 +21,12 @@ public partial class ObservationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetHistory([FromQuery] HistoryParameters parameters)
     {
-        Location locationEnum;
-        var result = Enum.TryParse<Location>(parameters.Location, true, out locationEnum);
-
-        if (result && parameters.Count > 0)
+        Location location = LocationUtil.GetLocationFromUserString(parameters.Location);
+        if (location != Location.Unknown && parameters.Count > 0)
         {
-            var weather = await _database.GetWeather(locationEnum);
+            var weather = await _database.GetWeather(location);
             var response = weather.HistorialWeather
-                            .OrderByDescending(w => w.Time)
+                            .OrderByDescending(w => w.UTCTime)
                             .Take(parameters.Count)
                             .ToList();
 

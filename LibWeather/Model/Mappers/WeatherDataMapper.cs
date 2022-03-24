@@ -14,7 +14,8 @@ namespace LibWeather.Model.Mappers
                 .ForMember(d => d.Humidity, s => s.MapFrom(x => x.RelHum))
                 .ForMember(d => d.DewPoint, s => s.MapFrom(x => x.Dewpt))
                 .ForMember(d => d.Pressure, s => s.MapFrom(x => x.Press))
-                .ForMember(d => d.Time, s => s.MapFrom(x => DateTimeUtils.ParseDate(x.LocalDateTimeFull)))
+                .ForMember(d => d.UTCTime, s => s.MapFrom(x => DateTimeUtils.ParseDate(x.AifstimeUtc)))
+                .ForMember(d => d.LocalTime, s => s.MapFrom(x => DateTimeUtils.ParseDate(x.LocalDateTimeFull)))
                 .ForMember(d => d.WindDirection, s => s.MapFrom(x => x.WindDir))
                 .ForMember(d => d.WindSpeedKmh, s => s.MapFrom(x => x.WindSpdKmh));
         }

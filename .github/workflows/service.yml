@@ -2,10 +2,9 @@ name: service
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
       - WeatherService/**
-      - WeatherService2/**
       - LibWeather/**
       - .github/workflows/service.yml
 
@@ -13,67 +12,31 @@ concurrency:
   group: environment-${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: false
 
-env:
-  # must match resource name in tf
-  AZURE_FUNCTION_BACKGROUND: 'weather-background-fa'
-  PROJECT_PATH: 'WeatherService'
-
 jobs:
-  deploy-function:
-    if: ${{ false }}
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-2
 
-    - name: Setup Dotnet 6.0.x
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0.x'
+      - name: Setup Dotnet 6.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
 
-    - name: dotnet build and publish
-      run: |
-        pushd ${{ env.PROJECT_PATH }}
-        dotnet restore
-        dotnet build --configuration Release --output './background-service'
+      - name: Install lambda tools
+        run: dotnet tool install -g Amazon.Lambda.Tools
 
-    - name: 'Run Azure Functions deploy for background service'
-      uses: azure/functions-action@v1
-      with:
-        app-name: ${{ env.AZURE_FUNCTION_BACKGROUND }}
-        package: '${{ env.PROJECT_PATH }}/background-service'
+      - name: dotnet build and publish
+        run: |
+          cd WeatherService
+          dotnet lambda deploy-function WeatherService
 
-    - name: logout
-      run: |
-        az logout
-
-  deploy-lambda:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-southeast-2
-
-    - name: Setup Dotnet 6.0.x
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0.x'
-
-    - name: Install lambda tools
-      run: dotnet tool install -g Amazon.Lambda.Tools
-
-    - name: dotnet build and publish
-      run: |
-        cd WeatherService2
-        dotnet lambda deploy-function WeatherService
-
-    - name: Increment lambda version
-      run: aws lambda publish-version --function-name WeatherService | jq '.Environment.Variables.cosmosdb_connection_string = "REDACTED"'
+      - name: Increment lambda version
+        run: aws lambda publish-version --function-name WeatherService | jq '.Environment.Variables.cosmosdb_connection_string = "REDACTED"'

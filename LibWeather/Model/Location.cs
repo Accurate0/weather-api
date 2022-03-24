@@ -9,6 +9,13 @@ namespace LibWeather.Model
         Unknown,
         Perth,
         PerthAirport,
-        RottnestIsland
+        RottnestIsland,
+        MelbourneOlympicPark,
+        Hobart,
+        AdelaideWestTerrace,
+        Brisbane,
+        DarwinAirport,
+        SydneyObservatoryHill,
+        Canberra,
     }
 }

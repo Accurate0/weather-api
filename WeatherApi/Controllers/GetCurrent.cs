@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 using LibWeather.Model;
+using LibWeather.Utils;
 
 namespace WeatherApi.Controllers;
 
@@ -18,11 +19,10 @@ public partial class ObservationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetCurrent([FromQuery] CurrentParameters parameters)
     {
-        Location locationEnum;
-        var result = Enum.TryParse<Location>(parameters.Location, true, out locationEnum);
-        if (result)
+        Location location = LocationUtil.GetLocationFromUserString(parameters.Location);
+        if (location != Location.Unknown)
         {
-            var weather = await _database.GetWeather(locationEnum);
+            var weather = await _database.GetWeather(location);
             var response = weather.CurrentWeather;
             return new OkObjectResult(response);
         }

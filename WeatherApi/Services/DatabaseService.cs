@@ -17,7 +17,25 @@ namespace WeatherApi.Services
         {
             _logger = logger;
             _config = configuration;
-            _client = new CosmosClient(configuration.GetConnectionString("Database"));
+            CosmosClientOptions? cosmosClientOptions = null;
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            {
+                cosmosClientOptions = new CosmosClientOptions()
+                {
+                    HttpClientFactory = () =>
+                    {
+                        HttpMessageHandler httpMessageHandler = new HttpClientHandler()
+                        {
+                            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                        };
+
+                        return new HttpClient(httpMessageHandler);
+                    },
+                    ConnectionMode = ConnectionMode.Gateway
+                };
+            }
+
+            _client = new CosmosClient(configuration.GetConnectionString("Database"), cosmosClientOptions);
         }
 
         public async Task InitAsync()
