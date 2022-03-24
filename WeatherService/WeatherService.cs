@@ -12,15 +12,56 @@ using LibWeather.Model.Mappers;
 
 using Newtonsoft.Json;
 
-using WeatherService;
-
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
 namespace WeatherService;
 
 public class WeatherService
 {
+    public async Task UpdateLocation(Container container, Location location, string url, IMapper mapper, ILambdaContext context, HttpClient client, DateTime now)
+    {
+        var resp = await client.GetAsync(url);
+        resp.EnsureSuccessStatusCode();
 
+        var json = await resp.Content.ReadAsStringAsync();
+        var weatherStationData = JsonConvert.DeserializeObject<WeatherStationData>(json);
+        var weather = mapper.Map<WeatherData>(weatherStationData);
+
+        weather.Version = WeatherData.CurrentVersion;
+        weather.LastUpdate = now;
+
+        try
+        {
+            var tryGetWeather = await container.ReadItemAsync<WeatherData>(location.ToString(), PartitionKey.None);
+            WeatherData weatherInDatabase = tryGetWeather.Resource;
+            if (!weatherInDatabase.Version.HasValue || weatherInDatabase.Version < weather.Version)
+            {
+                context.Logger.LogWarning($"{location.ToString()}: Database has version {weatherInDatabase.Version}, current is {weather.Version}");
+                context.Logger.LogWarning($"{location.ToString()}: Replacing data instead...");
+                // Don't merge, replace instead
+                weather.Version = WeatherData.CurrentVersion;
+                await container.UpsertItemAsync<WeatherData>(weather);
+            }
+            else if (weatherInDatabase.Version > weather.Version)
+            {
+                context.Logger.LogCritical($"{location.ToString()}: Database has version \"{weatherInDatabase.Version}\", current is \"{weather.Version}\"");
+                context.Logger.LogCritical($"{location.ToString()}: this makes no sense...");
+                throw new InvalidDataException("Data is inconsistent, aborting...");
+            }
+            else
+            {
+                context.Logger.LogInformation($"{location.ToString()}: Merging with current data...");
+                weatherInDatabase.Merge(weather);
+                await container.UpsertItemAsync<WeatherData>(weatherInDatabase);
+            }
+
+        }
+        catch (CosmosException)
+        {
+            await container.UpsertItemAsync<WeatherData>(weather);
+        }
+        context.Logger.LogInformation($"{location.ToString()}: Added to database successfully");
+    }
     public async Task Run(ILambdaContext context)
     {
         var connectionString = Environment.GetEnvironmentVariable("cosmosdb_connection_string");
@@ -54,51 +95,8 @@ public class WeatherService
         });
 
         IMapper mapper = new Mapper(mapperConfig);
-        var now = DateTime.Now;
+        var now = DateTime.UtcNow;
 
-        foreach (var kvp in Constants.FetchLocationUrls)
-        {
-            var resp = await client.GetAsync(kvp.Value);
-            resp.EnsureSuccessStatusCode();
-
-            var json = await resp.Content.ReadAsStringAsync();
-            var weatherStationData = JsonConvert.DeserializeObject<WeatherStationData>(json);
-            var weather = mapper.Map<WeatherData>(weatherStationData);
-
-            weather.Version = WeatherData.CurrentVersion;
-            weather.LastUpdate = now;
-
-            try
-            {
-                var tryGetWeather = await container.ReadItemAsync<WeatherData>(kvp.Key.ToString(), PartitionKey.None);
-                WeatherData weatherInDatabase = tryGetWeather.Resource;
-                if (!weatherInDatabase.Version.HasValue || weatherInDatabase.Version < weather.Version)
-                {
-                    context.Logger.LogWarning($"{kvp.Key.ToString()}: Database has version {weatherInDatabase.Version}, current is {weather.Version}");
-                    context.Logger.LogWarning($"{kvp.Key.ToString()}: Replacing data instead...");
-                    // Don't merge, replace instead
-                    weather.Version = WeatherData.CurrentVersion;
-                    await container.UpsertItemAsync<WeatherData>(weather);
-                }
-                else if (weatherInDatabase.Version > weather.Version)
-                {
-                    context.Logger.LogCritical($"{kvp.Key.ToString()}: Database has version \"{weatherInDatabase.Version}\", current is \"{weather.Version}\"");
-                    context.Logger.LogCritical($"{kvp.Key.ToString()}: this makes no sense...");
-                    throw new InvalidDataException("Data is inconsistent, aborting...");
-                }
-                else
-                {
-                    context.Logger.LogInformation($"{kvp.Key.ToString()}: Merging with current data...");
-                    weatherInDatabase.Merge(weather);
-                    await container.UpsertItemAsync<WeatherData>(weatherInDatabase);
-                }
-
-            }
-            catch (CosmosException)
-            {
-                await container.UpsertItemAsync<WeatherData>(weather);
-            }
-            context.Logger.LogInformation($"{kvp.Key.ToString()}: Added to database successfully");
-        }
+        await Task.WhenAll(Constants.FetchLocationUrls.Select(kvp => UpdateLocation(container, kvp.Key, kvp.Value, mapper, context, client, now)));
     }
 }
