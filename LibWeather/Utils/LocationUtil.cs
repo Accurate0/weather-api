@@ -38,14 +38,7 @@ namespace LibWeather.Utils
         {
             Location locationEnum;
             var result = Enum.TryParse<Location>(location, true, out locationEnum);
-            if (result)
-            {
-                return locationEnum;
-            }
-            else
-            {
-                return ResolveAlias(location);
-            }
+            return result ? locationEnum : ResolveAlias(location);
         }
 
         // Alias weirdly named stations
