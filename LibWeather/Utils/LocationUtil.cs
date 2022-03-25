@@ -48,25 +48,21 @@ namespace LibWeather.Utils
             }
         }
 
+        // Alias weirdly named stations
+        public static Dictionary<string, Location> AliasMap = new()
+        {
+            ["melbourne"] = Location.MelbourneOlympicPark,
+            ["adelaide"] = Location.AdelaideWestTerrace,
+            ["darwin"] = Location.DarwinAirport,
+            ["sydney"] = Location.SydneyObservatoryHill,
+            ["adelaide"] = Location.SydneyObservatoryHill,
+        };
+
         private static Location ResolveAlias(string name)
         {
-            switch (name.ToLower())
-            {
-                case "melbourne":
-                    return Location.MelbourneOlympicPark;
-
-                case "adelaide":
-                    return Location.AdelaideWestTerrace;
-
-                case "darwin":
-                    return Location.DarwinAirport;
-
-                case "sydney":
-                    return Location.SydneyObservatoryHill;
-
-                default:
-                    return Location.Unknown;
-            }
+            Location location;
+            AliasMap.TryGetValue(name.ToLower(), out location);
+            return location;
         }
     }
 }

@@ -6,7 +6,8 @@ namespace LibWeather.Model
     [JsonConverter(typeof(StringEnumConverter))]
     public enum Location
     {
-        Unknown,
+        // default
+        Unknown = 0,
         Perth,
         PerthAirport,
         RottnestIsland,
