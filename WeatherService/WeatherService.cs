@@ -18,40 +18,56 @@ namespace WeatherService;
 
 public class WeatherService
 {
-    public async Task UpdateLocation(Container container, Location location, string url, IMapper mapper, ILambdaContext context, HttpClient client, DateTime now)
-    {
-        var resp = await client.GetAsync(url);
-        resp.EnsureSuccessStatusCode();
+    private static DateTime _now = DateTime.UtcNow;
+    private static HttpClient _client = new HttpClient();
+    private static MapperConfiguration _mapperConfig = new(cfg =>
+   {
+       cfg.AddProfile<WeatherDataMapper>();
+       cfg.AddProfile<WeatherMapper>();
+   });
+    private static IMapper _mapper = new Mapper(_mapperConfig);
 
-        var json = await resp.Content.ReadAsStringAsync();
-        var weatherStationData = JsonConvert.DeserializeObject<WeatherStationData>(json);
-        var weather = mapper.Map<WeatherData>(weatherStationData);
+    public async Task UpdateLocation(ILambdaContext context, Container container, Location location, string url)
+    {
+        var logger = context.Logger;
+        var response = await _client.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+
+        var responseAsJson = await response.Content.ReadAsStringAsync();
+        var weatherStationData = JsonConvert.DeserializeObject<WeatherStationData>(responseAsJson);
+        var weather = _mapper.Map<WeatherData>(weatherStationData);
 
         weather.Version = WeatherData.CurrentVersion;
-        weather.LastUpdate = now;
+        weather.LastUpdate = _now;
+
+        var partitionKey = new PartitionKey(Constants.PartitionKey);
 
         try
         {
-            var tryGetWeather = await container.ReadItemAsync<WeatherData>(location.ToString(), PartitionKey.None);
+            var tryGetWeather = await container.ReadItemAsync<WeatherData>(location.ToString(), partitionKey);
             WeatherData weatherInDatabase = tryGetWeather.Resource;
             if (!weatherInDatabase.Version.HasValue || weatherInDatabase.Version < weather.Version)
             {
-                context.Logger.LogWarning($"{location.ToString()}: Database has version {weatherInDatabase.Version}, current is {weather.Version}");
-                context.Logger.LogWarning($"{location.ToString()}: Replacing data instead...");
+                logger.LogWarning($"{location.ToString()}: Database has version {weatherInDatabase.Version}, current is {weather.Version}");
+                logger.LogWarning($"{location.ToString()}: Replacing data instead...");
                 // Don't merge, replace instead
                 weather.Version = WeatherData.CurrentVersion;
                 await container.UpsertItemAsync<WeatherData>(weather);
             }
             else if (weatherInDatabase.Version > weather.Version)
             {
-                context.Logger.LogCritical($"{location.ToString()}: Database has version \"{weatherInDatabase.Version}\", current is \"{weather.Version}\"");
-                context.Logger.LogCritical($"{location.ToString()}: this makes no sense...");
+                logger.LogCritical($"{location.ToString()}: Database has version \"{weatherInDatabase.Version}\", current is \"{weather.Version}\"");
+                logger.LogCritical($"{location.ToString()}: this makes no sense...");
                 throw new InvalidDataException("Data is inconsistent, aborting...");
             }
             else
             {
-                context.Logger.LogInformation($"{location.ToString()}: Merging with current data...");
+                logger.LogInformation($"{location.ToString()}: Merging with current data...");
                 weatherInDatabase.Merge(weather);
+
+                // remove all older than 90 days
+                var removed = weatherInDatabase.HistorialWeather.RemoveAll(w => (_now - w.UTCTime).TotalDays > 90);
+                logger.LogInformation($"{location.ToString()}: Trimmed historical entries: {removed}");
                 await container.UpsertItemAsync<WeatherData>(weatherInDatabase);
             }
 
@@ -60,7 +76,7 @@ public class WeatherService
         {
             await container.UpsertItemAsync<WeatherData>(weather);
         }
-        context.Logger.LogInformation($"{location.ToString()}: Added to database successfully");
+        logger.LogInformation($"{location.ToString()}: Added to database successfully");
     }
     public async Task Run(ILambdaContext context)
     {
@@ -83,20 +99,10 @@ public class WeatherService
             };
         }
 
-        var client = new HttpClient();
         var cosmosClient = new CosmosClient(connectionString ?? CosmosDb.LocalConnectionString, cosmosClientOptions);
         Database database = await cosmosClient.CreateDatabaseIfNotExistsAsync(Constants.DatabaseName);
-        Container container = await database.CreateContainerIfNotExistsAsync(Constants.ContainerName, "/Id");
+        Container container = await database.CreateContainerIfNotExistsAsync(Constants.ContainerName, Constants.PartitionKey);
 
-        var mapperConfig = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile<WeatherDataMapper>();
-            cfg.AddProfile<WeatherMapper>();
-        });
-
-        IMapper mapper = new Mapper(mapperConfig);
-        var now = DateTime.UtcNow;
-
-        await Task.WhenAll(Constants.FetchLocationUrls.Select(kvp => UpdateLocation(container, kvp.Key, kvp.Value, mapper, context, client, now)));
+        await Task.WhenAll(Constants.FetchLocationUrls.Select(kvp => UpdateLocation(context, container, kvp.Key, kvp.Value)));
     }
 }

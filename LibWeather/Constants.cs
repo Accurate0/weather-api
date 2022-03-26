@@ -7,6 +7,8 @@ namespace LibWeather
         public const string DatabaseName = "WeatherDatabase";
         public const string ContainerName = "v1";
 
+        public const string PartitionKey = "/Id";
+
         public static Dictionary<Location, string> FetchLocationUrls = new()
         {
             [Location.Perth] = "http://reg.bom.gov.au/fwo/IDW60901/IDW60901.94608.json",

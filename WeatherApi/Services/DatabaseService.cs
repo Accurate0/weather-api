@@ -64,7 +64,7 @@ namespace WeatherApi.Services
 
         private async Task CreateContainerAsync()
         {
-            _container = await _database.CreateContainerIfNotExistsAsync(Constants.ContainerName, "/Id");
+            _container = await _database.CreateContainerIfNotExistsAsync(Constants.ContainerName, Constants.PartitionKey);
         }
 
         public Task Heartbeat()
