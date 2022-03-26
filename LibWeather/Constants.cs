@@ -5,7 +5,7 @@ namespace LibWeather
     public static class Constants
     {
         public const string DatabaseName = "WeatherDatabase";
-        public const string ContainerName = "v1";
+        public const string ContainerName = "WeatherContainer";
 
         public const string PartitionKey = "/Id";
 

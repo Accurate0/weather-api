@@ -71,5 +71,10 @@ namespace WeatherApi.Services
         {
             return _client.ReadAccountAsync();
         }
+
+        public IOrderedQueryable<WeatherData> GetQueryable()
+        {
+            return _container.GetItemLinqQueryable<WeatherData>();
+        }
     }
 }
