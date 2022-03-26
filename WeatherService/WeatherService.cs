@@ -40,11 +40,9 @@ public class WeatherService
         weather.Version = WeatherData.CurrentVersion;
         weather.LastUpdate = _now;
 
-        var partitionKey = new PartitionKey(Constants.PartitionKey);
-
         try
         {
-            var tryGetWeather = await container.ReadItemAsync<WeatherData>(location.ToString(), partitionKey);
+            var tryGetWeather = await container.ReadItemAsync<WeatherData>(location.ToString(), PartitionKey.None);
             WeatherData weatherInDatabase = tryGetWeather.Resource;
             if (!weatherInDatabase.Version.HasValue || weatherInDatabase.Version < weather.Version)
             {
@@ -72,8 +70,9 @@ public class WeatherService
             }
 
         }
-        catch (CosmosException)
+        catch (CosmosException ce)
         {
+            logger.LogCritical(ce.StackTrace);
             await container.UpsertItemAsync<WeatherData>(weather);
         }
         logger.LogInformation($"{location.ToString()}: Added to database successfully");
